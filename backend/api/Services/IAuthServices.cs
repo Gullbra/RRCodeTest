@@ -1,5 +1,6 @@
 ﻿using api.Models;
-using api.Models.DTOs;
+using api.Models.DTOs.Token;
+using api.Models.DTOs.User;
 
 namespace api.Services;
 

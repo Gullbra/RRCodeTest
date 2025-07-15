@@ -17,7 +17,6 @@ public class TokenServices : ITokenServices
   }
 
 
-
   public string GenerateAccessToken(User user)
   {
     var claims = new[] {
@@ -41,8 +40,6 @@ public class TokenServices : ITokenServices
   }
 
 
-
-
   public string GenerateRefreshToken()
   {
     var randomNumber = new byte[32];
@@ -50,7 +47,6 @@ public class TokenServices : ITokenServices
     rng.GetBytes(randomNumber);
     return Convert.ToBase64String(randomNumber);
   }
-
 
 
   public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)

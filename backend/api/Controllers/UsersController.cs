@@ -1,4 +1,5 @@
 ﻿using api.Models;
+using api.Models.DTOs.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +9,7 @@ namespace api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-//[Authorize]
+[Authorize]
 public class UsersController : Controller
 {
   private readonly UserManager<User> _userManager;
@@ -19,60 +20,32 @@ public class UsersController : Controller
   }
 
 
-
-  [HttpGet]
-  //public async Task<IActionResult> GetProfile()
-  public string GetProfile()
+  [HttpGet("profile")]
+  public async Task<IActionResult> GetProfile()
   {
-    return "Hey";
+    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+    if (userId == null)
+    {
+      return Unauthorized();
+    }
+
+    var user = await _userManager.FindByIdAsync(userId);
+
+    if (user == null)
+    {
+      Console.WriteLine(userId);
+      return NotFound();
+    }
+
+    var userDTO = new UserDTO
+    {
+      Id = user.Id,
+      Email = user.Email,
+      CreatedAt = user.CreatedAt
+    };
+
+    var response = ApiResponse<UserDTO>.SuccessResponse(userDTO, "Profile retrieved successfully");
+    return Ok(response);
   }
-
-
-
-//  [HttpPut("profile")]
-//  public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileDto updateProfileDto)
-//  {
-//    if (!ModelState.IsValid)
-//    {
-//      return BadRequest(ModelState);
-//    }
-
-//    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-//    if (userId == null)
-//    {
-//      return Unauthorized();
-//    }
-
-//    var user = await _userManager.FindByIdAsync(userId);
-
-//    if (user == null)
-//    {
-//      return NotFound();
-//    }
-
-//    user.FirstName = updateProfileDto.FirstName;
-//    user.LastName = updateProfileDto.LastName;
-
-//    var result = await _userManager.UpdateAsync(user);
-
-//    if (!result.Succeeded)
-//    {
-//      var errors = result.Errors.Select(e => e.Description).ToList();
-//      var errorResponse = ApiResponse<UserDto>.ErrorResponse("Update failed", errors);
-//      return BadRequest(errorResponse);
-//    }
-
-//    var userDto = new UserDto
-//    {
-//      Id = user.Id,
-//      FirstName = user.FirstName,
-//      LastName = user.LastName,
-//      Email = user.Email,
-//      CreatedAt = user.CreatedAt
-//    };
-
-//    var response = ApiResponse<UserDto>.SuccessResponse(userDto, "Profile updated successfully");
-//    return Ok(response);
-//  }
 }

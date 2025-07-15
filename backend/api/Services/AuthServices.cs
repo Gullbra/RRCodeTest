@@ -1,5 +1,6 @@
 ﻿using api.Models;
-using api.Models.DTOs;
+using api.Models.DTOs.Token;
+using api.Models.DTOs.User;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 
@@ -29,21 +30,6 @@ public class AuthServices : IAuthServices
       {
         return ApiResponse<TokenDTO>.ErrorResponse("Invalid email or password");
       }
-
-      //var accessToken = _tokenServices.GenerateAccessToken(user);
-      //var refreshToken = _tokenServices.GenerateRefreshToken();
-
-      //user.RefreshToken = refreshToken;
-      //user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(int.Parse(_configuration["JwtSettings:RefreshExpiryInDays"]));
-
-      //await _userManager.UpdateAsync(user);
-
-      //var tokenDTO = new TokenDTO
-      //{
-      //  AccessToken = accessToken,
-      //  RefreshToken = refreshToken,
-      //  ExpiryTime = DateTime.UtcNow.AddMinutes(int.Parse(_configuration["JwtSettings:AccessExpiryInMinutes"]))
-      //};
 
       return ApiResponse<TokenDTO>.SuccessResponse(await CreateTokenDTO(user), "Login successful");
     }
@@ -123,21 +109,6 @@ public class AuthServices : IAuthServices
       {
         return ApiResponse<TokenDTO>.ErrorResponse("Invalid refresh token");
       }
-
-      //var newAccessToken = _tokenServices.GenerateAccessToken(user);
-      //var newRefreshToken = _tokenServices.GenerateRefreshToken();
-
-      //user.RefreshToken = newRefreshToken;
-      //user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
-
-      //await _userManager.UpdateAsync(user);
-
-      //var tokenDTO = new TokenDTO
-      //{
-      //  AccessToken = newAccessToken,
-      //  RefreshToken = newRefreshToken,
-      //  ExpiryTime = DateTime.UtcNow.AddMinutes(int.Parse(_configuration["JwtSettings:ExpiryInMinutes"]))
-      //};
 
       return ApiResponse<TokenDTO>.SuccessResponse(await CreateTokenDTO(user), "Token refreshed successfully");
     }

@@ -1,10 +1,14 @@
-﻿using api.Models.DTOs;
+﻿using api.Models.DTOs.Token;
+using api.Models.DTOs.User;
 using api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace api.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
 public class AuthController : Controller
 {
   private readonly IAuthServices _authServices;

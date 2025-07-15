@@ -5,24 +5,48 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-
 
 
 // Services
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+  c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+
+  // the JWT security scheme for Swagger
+  c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+  {
+    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+    Name = "Authorization",
+    In = ParameterLocation.Header,
+    Type = SecuritySchemeType.Http,
+    Scheme = "Bearer"
+  });
+
+  c.AddSecurityRequirement(new OpenApiSecurityRequirement
+  {
+    {
+      new OpenApiSecurityScheme
+      {
+        Reference = new OpenApiReference
+        {
+          Type = ReferenceType.SecurityScheme,
+          Id = "Bearer"
+        }
+      },
+      new string[] {}
+    }
+  });
+});
 
 
-// Database
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DevelopmentConnection")));
+// Database and Identity
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("DevelopmentConnection")));
 builder.Services
   .AddIdentity<User, IdentityRole>(options =>
   {
@@ -37,12 +61,13 @@ builder.Services
   .AddDefaultTokenProviders();
 
 
-// Add custom services
+// Custom services
 builder.Services.AddScoped<IAuthServices, AuthServices>();
 builder.Services.AddScoped<ITokenServices, TokenServices>();
+builder.Services.AddScoped<IBookServices, BookServices>();
 
 
-// Configure JWT Authentication
+// JWT Authentication Configuration
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 var secretKey = jwtSettings["SecretKey"];
 
@@ -67,26 +92,22 @@ builder.Services.AddAuthentication(options =>
 });
 
 
-
 var app = builder.Build();
 
 
-// Initialize database
+// database init
 using (var scope = app.Services.CreateScope())
 {
   var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
   context.Database.EnsureCreated();
 }
 
-
-// Configure the HTTP request pipeline.
+// Swagger
 if (app.Environment.IsDevelopment())
 {
   app.UseSwagger();
   app.UseSwaggerUI();
 }
-
-
 
 
 app.UseHttpsRedirection();
@@ -95,4 +116,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
