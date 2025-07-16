@@ -36,19 +36,19 @@ public class Program
       });
 
       c.AddSecurityRequirement(new OpenApiSecurityRequirement
-  {
-    {
-      new OpenApiSecurityScheme
       {
-        Reference = new OpenApiReference
         {
-          Type = ReferenceType.SecurityScheme,
-          Id = "Bearer"
+          new OpenApiSecurityScheme
+          {
+            Reference = new OpenApiReference
+            {
+              Type = ReferenceType.SecurityScheme,
+              Id = "Bearer"
+            }
+          },
+          new string[] {}
         }
-      },
-      new string[] {}
-    }
-  });
+      });
     });
 
     // Cors Spa proxy
@@ -57,8 +57,8 @@ public class Program
       options.AddPolicy("AllowAngularApp", policy =>
       {
         policy.WithOrigins(
-          "http://localhost:4200", 
-          "https://your-app-name.azurewebsites.net",
+          "http://localhost:4200",
+          "https://rrcodetest.azurewebsites.net",
           "https://localhost:4200"
         ).AllowAnyHeader().AllowAnyMethod();
       });
@@ -114,6 +114,8 @@ public class Program
 
     var app = builder.Build();
 
+    app.UseCors("AllowAngularApp");
+
 
     // database init
     using (var scope = app.Services.CreateScope())
@@ -129,10 +131,8 @@ public class Program
       app.UseSwaggerUI();
     }
 
-
     app.UseHttpsRedirection();
     app.UseAuthentication();
-    app.UseCors("AllowAngularApp");
     app.UseAuthorization();
     app.MapControllers();
 
@@ -160,14 +160,16 @@ public class Program
       {
         context.Response.ContentType = "text/html";
         await context.Response.WriteAsync(@"
-      <html>
-        <body>
-          <h1>Angular app not built yet</h1>
-          <p>Run: <code>dotnet publish</code> to build the Angular app</p>
-          <p>Or run Angular separately: <code>cd frontend && ng serve</code></p>
-        </body>
-      </html>
-    ");
+          <html>
+            <body>
+              <h1>Angular app not built yet</h1>
+              <p>Run: <code>dotnet publish</code> to build the Angular app</p>
+              <p>Or run Angular separately: <code>cd frontend && ng serve</code></p>
+              <br>
+              <p>Update check</p>
+            </body>
+          </html>
+        ");
       });
     }
 
