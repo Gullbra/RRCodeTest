@@ -41,7 +41,7 @@ public class UsersController : Controller
     var userDTO = new UserDTO
     {
       Id = user.Id,
-      Email = user.Email,
+      Email = user.Email ?? "",
       CreatedAt = user.CreatedAt
     };
 

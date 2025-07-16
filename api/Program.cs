@@ -4,6 +4,7 @@ using api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -41,6 +42,17 @@ builder.Services.AddSwaggerGen(c =>
       },
       new string[] {}
     }
+  });
+});
+
+// Cors Spa proxy
+builder.Services.AddCors(options =>
+{
+  options.AddPolicy("AllowAngularApp", policy =>
+  {
+    policy.WithOrigins("http://localhost:4200", "https://your-app-name.azurewebsites.net")
+          .AllowAnyHeader()
+          .AllowAnyMethod();
   });
 });
 
@@ -86,7 +98,7 @@ builder.Services.AddAuthentication(options =>
     ValidateIssuerSigningKey = true,
     ValidIssuer = jwtSettings["Issuer"],
     ValidAudience = jwtSettings["Audience"],
-    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
+    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey ?? "")),
     ClockSkew = TimeSpan.Zero
   };
 });
@@ -112,7 +124,47 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
+app.UseCors("AllowAngularApp");
 app.UseAuthorization();
 app.MapControllers();
+
+// Serve Angular static files
+//app.UseDefaultFiles();
+//app.UseStaticFiles();
+var angularDistPath = Path.Combine(builder.Environment.ContentRootPath, "..", "frontend", "dist");
+if (Directory.Exists(angularDistPath))
+{
+  app.UseStaticFiles(new StaticFileOptions
+  {
+    FileProvider = new PhysicalFileProvider(angularDistPath),
+    RequestPath = ""
+  });
+
+  app.MapFallbackToFile("index.html", new StaticFileOptions
+  {
+    FileProvider = new PhysicalFileProvider(angularDistPath)
+  });
+}
+else
+{
+  // If no dist folder, just serve a simple message
+  app.MapFallback(async context =>
+  {
+    context.Response.ContentType = "text/html";
+    await context.Response.WriteAsync(@"
+      <html>
+        <body>
+          <h1>Angular app not built yet</h1>
+          <p>Run: <code>dotnet publish</code> to build the Angular app</p>
+          <p>Or run Angular separately: <code>cd frontend && ng serve</code></p>
+        </body>
+      </html>
+    ");
+  });
+}
+
+
+//// Fallback to index.html for Angular routing
+//app.MapFallbackToFile("index.html");
 
 app.Run();

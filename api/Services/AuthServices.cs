@@ -47,7 +47,7 @@ public class AuthServices : IAuthServices
     var refreshToken = _tokenServices.GenerateRefreshToken();
 
     user.RefreshToken = refreshToken;
-    user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(int.Parse(_configuration["JwtSettings:RefreshExpiryInDays"]));
+    user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(int.Parse(_configuration["JwtSettings:RefreshExpiryInDays"] ?? ""));
 
     await _userManager.UpdateAsync(user);
 
@@ -55,7 +55,7 @@ public class AuthServices : IAuthServices
     {
       AccessToken = accessToken,
       RefreshToken = refreshToken,
-      ExpiryTime = DateTime.UtcNow.AddMinutes(int.Parse(_configuration["JwtSettings:AccessExpiryInMinutes"]))
+      ExpiryTime = DateTime.UtcNow.AddMinutes(int.Parse(_configuration["JwtSettings:AccessExpiryInMinutes"] ?? ""))
     };
   }
 

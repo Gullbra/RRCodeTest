@@ -30,9 +30,9 @@ public class TokenServices : ITokenServices
         issuer: _configuration["JwtSettings:Issuer"],
         audience: _configuration["JwtSettings:Audience"],
         claims: claims,
-        expires: DateTime.UtcNow.AddMinutes(int.Parse(_configuration["JwtSettings:AccessExpiryInMinutes"])),
+        expires: DateTime.UtcNow.AddMinutes(int.Parse(_configuration["JwtSettings:AccessExpiryInMinutes"] ?? "")),
         signingCredentials: new SigningCredentials(
-          new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"])),
+          new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"] ?? "")),
           SecurityAlgorithms.HmacSha256)
     );
 
@@ -59,7 +59,7 @@ public class TokenServices : ITokenServices
       ValidateAudience = false,
       ValidateIssuer = false,
       ValidateIssuerSigningKey = true,
-      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
+      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey ?? "")),
       ValidateLifetime = false // Don't validate lifetime for refresh
     };
 
