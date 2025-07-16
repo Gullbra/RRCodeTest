@@ -56,9 +56,11 @@ public class Program
     {
       options.AddPolicy("AllowAngularApp", policy =>
       {
-        policy.WithOrigins("http://localhost:4200", "https://your-app-name.azurewebsites.net")
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+        policy.WithOrigins(
+          "http://localhost:4200", 
+          "https://your-app-name.azurewebsites.net",
+          "https://localhost:4200"
+        ).AllowAnyHeader().AllowAnyMethod();
       });
     });
 
