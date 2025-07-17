@@ -143,42 +143,21 @@ public class Program
     app.MapControllers();
 
 
-    // Serve Angular static files
-    //app.UseDefaultFiles();
-    //app.UseStaticFiles();
-    var angularDistPath = Path.Combine(builder.Environment.ContentRootPath, "..", "frontend", "dist");
-    if (Directory.Exists(angularDistPath))
+    app.MapFallback(async context =>
     {
-      app.UseStaticFiles(new StaticFileOptions
-      {
-        FileProvider = new PhysicalFileProvider(angularDistPath),
-        RequestPath = ""
-      });
-
-      app.MapFallbackToFile("index.html", new StaticFileOptions
-      {
-        FileProvider = new PhysicalFileProvider(angularDistPath)
-      });
-    }
-    else
-    {
-      // If no dist folder, just serve a simple message
-      app.MapFallback(async context =>
-      {
-        context.Response.ContentType = "text/html";
-        await context.Response.WriteAsync(@"
-          <html>
-            <body>
-              <h1>Angular app not built yet</h1>
-              <p>Run: <code>dotnet publish</code> to build the Angular app</p>
-              <p>Or run Angular separately: <code>cd frontend && ng serve</code></p>
-              <br>
-              <p>Update check</p>
-            </body>
-          </html>
-        ");
-      });
-    }
+      context.Response.ContentType = "text/html";
+      await context.Response.WriteAsync(@"
+        <html>
+          <body>
+            <h1>Angular app not built yet</h1>
+            <p>Run: <code>dotnet publish</code> to build the Angular app</p>
+            <p>Or run Angular separately: <code>cd frontend && ng serve</code></p>
+            <br>
+            <p>Update check</p>
+          </body>
+        </html>
+      ");
+    });
 
     app.Run();
   }
