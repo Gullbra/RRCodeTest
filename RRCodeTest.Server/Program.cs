@@ -147,13 +147,35 @@ public class Program
     {
       context.Response.ContentType = "text/html";
       await context.Response.WriteAsync(@"
-        <html>
+        <!DOCTYPE html>
+        <html lang=""en"">
+          <head>
+              <meta charset=""UTF-8"">
+              <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
+              <title>API Endpoints</title>
+          </head>
           <body>
-            <h1>Angular app not built yet</h1>
-            <p>Run: <code>dotnet publish</code> to build the Angular app</p>
-            <p>Or run Angular separately: <code>cd frontend && ng serve</code></p>
-            <br>
-            <p>Update check</p>
+              <h1>API overview</h1>
+              <br/>
+              <p>base domain: https://rrcodetest.azurewebsites.net</p>
+              <br/>
+              <p>/api</p>
+              <p>&nbsp;&nbsp;/auth</p>
+              <p>&nbsp;&nbsp;&nbsp;&nbsp;/register [post]</p>
+              <p>&nbsp;&nbsp;&nbsp;&nbsp;/login [post]</p>
+              <p>&nbsp;&nbsp;&nbsp;&nbsp;/refresh [post]</p>
+              <p>&nbsp;&nbsp;&nbsp;&nbsp;/logout [post]</p>
+              <br/>
+              <p>&nbsp;&nbsp;/books [get] [protected]</p>
+              <p>&nbsp;&nbsp;/books [post] [protected]</p>
+              <p>&nbsp;&nbsp;&nbsp;&nbsp;/{id} [put] [protected]</p>
+              <p>&nbsp;&nbsp;&nbsp;&nbsp;/{id} [delete] [protected]</p>
+              <br/>
+              <p>&nbsp;&nbsp;/users/profile [get][protected]</p>
+              <br/>
+              <p>&nbsp;&nbsp;/dev</p>
+              <p>&nbsp;&nbsp;&nbsp;&nbsp;/users [get]</p>
+              <p>&nbsp;&nbsp;&nbsp;&nbsp;/books [get]</p>
           </body>
         </html>
       ");
