@@ -58,8 +58,9 @@ public class Program
       {
         policy.WithOrigins(
           "http://localhost:4200",
+          "https://localhost:4200",
           "https://rrcodetest.azurewebsites.net",
-          "https://localhost:4200"
+          "https://rrcodetestnetlify.netlify.app"
         ).AllowAnyHeader().AllowAnyMethod();
       });
     });
