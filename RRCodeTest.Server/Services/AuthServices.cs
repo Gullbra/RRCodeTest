@@ -21,27 +21,7 @@ public class AuthServices : IAuthServices
   }
 
 
-  public async Task<ApiResponse<TokenDTO>> Login(LoginDTO loginInfo)
-  {
-    try
-    {
-      var user = await _userManager.FindByEmailAsync(loginInfo.Email);
-      if (user == null || !await _userManager.CheckPasswordAsync(user, loginInfo.Password))
-      {
-        return ApiResponse<TokenDTO>.ErrorResponse("Invalid email or password");
-      }
-
-      return ApiResponse<TokenDTO>.SuccessResponse(await CreateTokenDTO(user), "Login successful");
-    }
-    catch (Exception ex)
-    {
-      Console.WriteLine(ex.ToString());
-      return ApiResponse<TokenDTO>.ErrorResponse("Server error when logging in");
-    }
-  }
-
-
-  private async Task<TokenDTO> CreateTokenDTO (User user)
+  private async Task<TokenDTO> CreateTokenDTO(User user)
   {
     var accessToken = _tokenServices.GenerateAccessToken(user);
     var refreshToken = _tokenServices.GenerateRefreshToken();
@@ -60,12 +40,12 @@ public class AuthServices : IAuthServices
   }
 
 
-  public async Task<ApiResponse<UserDTO>> Register(RegisterDTO registerInfo)
+  public async Task<ApiResponse<TokenDTO>> Register(RegisterDTO registerInfo)
   {
     var existingUser = await _userManager.FindByEmailAsync(registerInfo.Email);
     if (existingUser != null)
     {
-      return ApiResponse<UserDTO>.ErrorResponse("User with this email already exists");
+      return ApiResponse<TokenDTO>.ErrorResponse("User with this email already exists");
     }
 
     var user = new User
@@ -78,17 +58,37 @@ public class AuthServices : IAuthServices
     if (!result.Succeeded)
     {
       var errors = result.Errors.Select(e => e.Description).ToList();
-      return ApiResponse<UserDTO>.ErrorResponse("Registration failed", errors);
+      return ApiResponse<TokenDTO>.ErrorResponse("Registration failed", errors);
     }
 
-    var userDTO = new UserDTO
-    {
-      Id = user.Id,
-      Email = user.Email,
-      CreatedAt = user.CreatedAt
-    };
+    //var userDTO = new UserDTO
+    //{
+    //  Id = user.Id,
+    //  Email = user.Email,
+    //  CreatedAt = user.CreatedAt
+    //};
 
-    return ApiResponse<UserDTO>.SuccessResponse(userDTO, "Registration successful");
+    return ApiResponse<TokenDTO>.SuccessResponse(await CreateTokenDTO(user), "Registration successful");
+  }
+
+
+  public async Task<ApiResponse<TokenDTO>> Login(LoginDTO loginInfo)
+  {
+    try
+    {
+      var user = await _userManager.FindByEmailAsync(loginInfo.Email);
+      if (user == null || !await _userManager.CheckPasswordAsync(user, loginInfo.Password))
+      {
+        return ApiResponse<TokenDTO>.ErrorResponse("Invalid email or password");
+      }
+
+      return ApiResponse<TokenDTO>.SuccessResponse(await CreateTokenDTO(user), "Login successful");
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine(ex.ToString());
+      return ApiResponse<TokenDTO>.ErrorResponse("Server error when logging in");
+    }
   }
 
 

@@ -4,6 +4,7 @@ using RRCodeTest.Server.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using RRCodeTest.Server.Models;
 
 namespace RRCodeTest.Server.Controllers;
 

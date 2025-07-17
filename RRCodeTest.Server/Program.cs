@@ -18,40 +18,44 @@ public class Program
     var builder = WebApplication.CreateBuilder(args);
 
 
-    // Services
     builder.Services.AddControllers();
     builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwaggerGen(c =>
+
+    if (builder.Environment.IsDevelopment())
     {
-      c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
-
-      // the JWT security scheme for Swagger
-      c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+      builder.Services.AddSwaggerGen(c =>
       {
-        Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-        Name = "Authorization",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.Http,
-        Scheme = "Bearer"
-      });
+        c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
 
-      c.AddSecurityRequirement(new OpenApiSecurityRequirement
-      {
+        // the JWT security scheme config for Swagger
+        c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
         {
-          new OpenApiSecurityScheme
-          {
-            Reference = new OpenApiReference
-            {
-              Type = ReferenceType.SecurityScheme,
-              Id = "Bearer"
-            }
-          },
-          new string[] {}
-        }
-      });
-    });
+          Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+          Name = "Authorization",
+          In = ParameterLocation.Header,
+          Type = SecuritySchemeType.Http,
+          Scheme = "Bearer"
+        });
 
-    // Cors Spa proxy
+        c.AddSecurityRequirement(new OpenApiSecurityRequirement
+        {
+          {
+            new OpenApiSecurityScheme
+            {
+              Reference = new OpenApiReference
+              {
+                Type = ReferenceType.SecurityScheme,
+                Id = "Bearer"
+              }
+            },
+            new string[] {}
+          }
+        });
+      });
+    }
+
+
+    // Cors policy
     builder.Services.AddCors(options =>
     {
       options.AddPolicy("AllowAngularApp", policy =>
@@ -115,6 +119,7 @@ public class Program
 
     var app = builder.Build();
 
+    // Adding cors mw as early as possible in the pipeline
     app.UseCors("AllowAngularApp");
 
 
@@ -136,6 +141,7 @@ public class Program
     app.UseAuthentication();
     app.UseAuthorization();
     app.MapControllers();
+
 
     // Serve Angular static files
     //app.UseDefaultFiles();
@@ -173,10 +179,6 @@ public class Program
         ");
       });
     }
-
-
-    //// Fallback to index.html for Angular routing
-    //app.MapFallbackToFile("index.html");
 
     app.Run();
   }
