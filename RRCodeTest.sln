@@ -5,17 +5,6 @@ VisualStudioVersion = 17.9.34526.213
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RRCodeTest.Server", "RRCodeTest.Server\RRCodeTest.Server.csproj", "{10F2D775-1D52-44AA-B6AB-019F45C436A5}"
 EndProject
-Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "rrcodetest.client", "rrcodetest.client\rrcodetest.client.esproj", "{9BCDF2ED-2075-485F-B129-EC4BE14AE739}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{2896C5B9-D34A-41F4-AC34-093746A32A46}"
-	ProjectSection(SolutionItems) = preProject
-		docs\azure_deployment_guide.md = docs\azure_deployment_guide.md
-		docs\instruktionerAvskalat.md = docs\instruktionerAvskalat.md
-		docs\intructions.md = docs\intructions.md
-		docs\old.md = docs\old.md
-		docs\oldAngularJson.md = docs\oldAngularJson.md
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D8C1B92F-2F32-4270-A3A8-31E672A173AB}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
@@ -31,12 +20,6 @@ Global
 		{10F2D775-1D52-44AA-B6AB-019F45C436A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{10F2D775-1D52-44AA-B6AB-019F45C436A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{10F2D775-1D52-44AA-B6AB-019F45C436A5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9BCDF2ED-2075-485F-B129-EC4BE14AE739}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9BCDF2ED-2075-485F-B129-EC4BE14AE739}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9BCDF2ED-2075-485F-B129-EC4BE14AE739}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{9BCDF2ED-2075-485F-B129-EC4BE14AE739}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9BCDF2ED-2075-485F-B129-EC4BE14AE739}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9BCDF2ED-2075-485F-B129-EC4BE14AE739}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,15 +1,11 @@
 ﻿using RRCodeTest.Server.DB;
-using RRCodeTest.Server.Models.DTOs;
 using RRCodeTest.Server.Models.DTOs.Book;
-using RRCodeTest.Server.Models.DTOs.User;
 using RRCodeTest.Server.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using RRCodeTest.Server.Models;
 using System.Security.Claims;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RRCodeTest.Server.Controllers;
 
@@ -85,7 +81,7 @@ public class BooksController : Controller
 
 
   [HttpPut("{id}")]
-  public async Task<ActionResult<BookDTO>> UpdateBook(string id, NewBookDTO updatedBook)
+  public async Task<ActionResult<BookDTO>> UpdateBook(string id, [FromBody]NewBookDTO updatedBook)
   {
     if (!ModelState.IsValid)
     {

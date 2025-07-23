@@ -31,9 +31,6 @@ public class AppDbContext : IdentityDbContext<User>
     {
       entity.HasKey(e => e.Id);
 
-      //entity.Property(e => e.DateOfPublication)
-      //       .HasColumnType("TEXT");
-
       entity.HasOne(b => b.User)
             .WithMany(u => u.Books)
             .HasForeignKey(b => b.UserId)
@@ -42,40 +39,3 @@ public class AppDbContext : IdentityDbContext<User>
     });
   }
 }
-
-
-
-// Configure relationship with ApplicationUser
-//entity.HasKey(e => e.Id);
-//entity.Property(e => e.Title).IsRequired().HasMaxLength(200);
-//entity.Property(e => e.Author).IsRequired().HasMaxLength(100);
-//entity.Property(e => e.ISBN).HasMaxLength(13);
-
-//entity.HasOne(b => b.User).WithMany(u => u.Id);
-//.HasForeignKey(b => b.Id)
-//.OnDelete(DeleteBehavior.Cascade);
-
-
-//entity.Property(e => e.Title).IsRequired().HasMaxLength(200);
-//entity.Property(e => e.Author).IsRequired().HasMaxLength(100);
-
-
-//entity.HasOne(b => b.User)
-//.WithMany(u => u.Books)
-//.HasForeignKey(b => b.Id)
-//.OnDelete(DeleteBehavior.SetNull);
-
-//entity.Property(e => e.ISBN).HasMaxLength(13);
-
-
-//entity.Property(e => e.Title)
-//      .HasMaxLength(500);
-//entity.Property(e => e.Author)
-//      .HasMaxLength(500);
-//entity.Property(e => e.Description)
-//      .HasMaxLength(500);
-//entity.Property(e => e.DateOfPublication)
-//       .HasMaxLength(500);
-
-//entity.HasIndex(e => e.Email)
-//      .IsUnique();
