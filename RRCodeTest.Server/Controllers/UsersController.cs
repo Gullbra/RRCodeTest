@@ -34,7 +34,6 @@ public class UsersController : Controller
 
     if (user == null)
     {
-      Console.WriteLine(userId);
       return NotFound();
     }
 

@@ -1,8 +1,5 @@
-﻿using RRCodeTest.Server.Models.DTOs.Token;
-using RRCodeTest.Server.Models.DTOs.User;
-using RRCodeTest.Server.Models;
+﻿using RRCodeTest.Server.Models;
 using RRCodeTest.Server.Models.DTOs.Book;
-using System.Net;
 
 namespace RRCodeTest.Server.Services;
 

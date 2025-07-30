@@ -1,5 +1,5 @@
 ﻿using RRCodeTest.Server.DB;
-using RRCodeTest.Server.Models.DTOs.Book;
+using RRCodeTest.Server.Models.DTOs.Quote;
 using RRCodeTest.Server.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -12,21 +12,21 @@ namespace RRCodeTest.Server.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-public class BooksController : Controller
+public class QuotesController : Controller
 {
   private readonly UserManager<User> _userManager;
-  private readonly IBookServices _bookServices;
+  private readonly IQuoteServices _quoteServices;
 
 
-  public BooksController(UserManager<User> userManager, IBookServices bookServices)
+  public QuotesController(UserManager<User> userManager, IQuoteServices quoteServices)
   {
     _userManager = userManager;
-    _bookServices = bookServices;
+    _quoteServices = quoteServices;
   }
 
 
   [HttpGet]
-  public async Task<IActionResult> GetBooks()
+  public async Task<IActionResult> GetQuotes()
   {
     var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -35,7 +35,7 @@ public class BooksController : Controller
       return Unauthorized();
     }
 
-    var result = await _bookServices.GetBooks(userId);
+    var result = await _quoteServices.GetQuotes(userId);
 
     if (result.Success)
     {
@@ -46,7 +46,7 @@ public class BooksController : Controller
 
 
   [HttpPost]
-  public async Task<ActionResult<BookDTO>> CreateBook([FromBody] NewBookDTO bookInfo)
+  public async Task<ActionResult<QuoteDTO>> CreateQuote([FromBody] NewQuoteDTO quoteInfo)
   {
     if (!ModelState.IsValid)
     {
@@ -68,7 +68,7 @@ public class BooksController : Controller
     }
 
 
-    var result = await _bookServices.AddBook(bookInfo, userId, user);
+    var result = await _quoteServices.AddQuote(quoteInfo, userId, user);
 
     if (result.Success)
     {
@@ -79,7 +79,7 @@ public class BooksController : Controller
 
 
   [HttpPut("{id}")]
-  public async Task<ActionResult<BookDTO>> UpdateBook(string id, [FromBody]NewBookDTO updatedBook)
+  public async Task<ActionResult<QuoteDTO>> UpdateQuote(string id, [FromBody] NewQuoteDTO updatedQuote)
   {
     if (!ModelState.IsValid)
     {
@@ -100,7 +100,7 @@ public class BooksController : Controller
       return NotFound();
     }
 
-    var result = await _bookServices.UpdateBook(updatedBook, id, userId);
+    var result = await _quoteServices.UpdateQuote(updatedQuote, id, userId);
 
     if (result.Success)
     {
@@ -111,7 +111,7 @@ public class BooksController : Controller
 
 
   [HttpDelete("{id}")]
-  public async Task<ActionResult<BookDTO>> DeleteBook(string id)
+  public async Task<ActionResult<QuoteDTO>> DeleteQuote(string id)
   {
     if (!ModelState.IsValid)
     {
@@ -132,7 +132,7 @@ public class BooksController : Controller
       return NotFound();
     }
 
-    var result = await _bookServices.DeleteBook(id, userId);
+    var result = await _quoteServices.DeleteQuote(id, userId);
 
     if (result.Success)
     {
@@ -141,4 +141,3 @@ public class BooksController : Controller
     return BadRequest(result);
   }
 }
-

@@ -8,11 +8,12 @@ namespace RRCodeTest.Server.DB;
 
 public class AppDbContext : IdentityDbContext<User>
 {
-  public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-  {
-  }
+  public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
 
   public DbSet<Book> Books { get; set; }
+  public DbSet<Quote> Quotes { get; set; }
+
 
   protected override void OnModelCreating(ModelBuilder builder)
   {
@@ -33,6 +34,17 @@ public class AppDbContext : IdentityDbContext<User>
 
       entity.HasOne(b => b.User)
             .WithMany(u => u.Books)
+            .HasForeignKey(b => b.UserId)
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired();
+    });
+
+    builder.Entity<Quote>(entity =>
+    {
+      entity.HasKey(e => e.Id);
+
+      entity.HasOne(b => b.User)
+            .WithMany(u => u.Quotes)
             .HasForeignKey(b => b.UserId)
             .OnDelete(DeleteBehavior.Cascade)
             .IsRequired();

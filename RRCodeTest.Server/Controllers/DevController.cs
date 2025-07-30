@@ -1,12 +1,9 @@
 ﻿using RRCodeTest.Server.DB;
-using RRCodeTest.Server.Models.DTOs.Book;
-using RRCodeTest.Server.Models.DTOs.User;
 using RRCodeTest.Server.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RRCodeTest.Server.Models;
-using System.Security.Claims;
 
 namespace RRCodeTest.Server.Controllers;
 

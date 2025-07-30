@@ -1,14 +1,12 @@
 ﻿using RRCodeTest.Server.Models;
 using RRCodeTest.Server.Models.DTOs.Book;
-using Microsoft.AspNetCore.Identity;
 using RRCodeTest.Server.DB;
 using Microsoft.EntityFrameworkCore;
 
 namespace RRCodeTest.Server.Services;
 
-public class BookServices(UserManager<User> userManager, AppDbContext context) : IBookServices
+public class BookServices(AppDbContext context) : IBookServices
 {
-  private readonly UserManager<User> _userManager = userManager;
   private readonly AppDbContext _context = context;
 
   public async Task<ApiResponse<IEnumerable<BookDTO>>> GetBooks(string userId)
@@ -58,8 +56,6 @@ public class BookServices(UserManager<User> userManager, AppDbContext context) :
     }
     catch (Exception ex)
     {
-      //Console.WriteLine($"Full exception: {ex}");
-      //Console.WriteLine($"Inner exception: {ex.InnerException}");
       return ApiResponse<BookDTO>.ErrorResponse("Could not add the book to the DB", [ex.Message]);
     }
   }
@@ -98,8 +94,6 @@ public class BookServices(UserManager<User> userManager, AppDbContext context) :
     }
     catch (Exception ex)
     {
-      //Console.WriteLine($"Full exception: {ex}");
-      //Console.WriteLine($"Inner exception: {ex.InnerException}");
       return ApiResponse<BookDTO>.ErrorResponse("Could not update the book", [ex.Message]);
     }
   }
@@ -134,8 +128,6 @@ public class BookServices(UserManager<User> userManager, AppDbContext context) :
     }
     catch (Exception ex)
     {
-      //Console.WriteLine($"Full exception: {ex}");
-      //Console.WriteLine($"Inner exception: {ex.InnerException}");
       return ApiResponse<BookDTO>.ErrorResponse("Could not delete the book", [ex.Message]);
     }
   }
