@@ -86,6 +86,7 @@ public class Program
 
 
     // Custom services
+    builder.Services.AddScoped<IQuoteServices, QuoteService>();
     builder.Services.AddScoped<IAuthServices, AuthServices>();
     builder.Services.AddScoped<ITokenServices, TokenServices>();
     builder.Services.AddScoped<IBookServices, BookServices>();
@@ -126,7 +127,19 @@ public class Program
     using (var scope = app.Services.CreateScope())
     {
       var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-      context.Database.EnsureCreated();
+
+      var pendingMigrations = context.Database.GetPendingMigrations();
+
+      Console.WriteLine("pending migrations: " + pendingMigrations.Count());
+      if (pendingMigrations.Any())
+      {
+        //_logger.LogInformation($"Applying {pendingMigrations.Count()} pending migrations");
+        context.Database.Migrate();
+        //_logger.LogInformation("Migrations applied successfully");
+      } else
+      {
+        context.Database.EnsureCreated();
+      }
     }
 
     // Swagger

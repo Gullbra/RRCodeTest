@@ -10,4 +10,5 @@ public class User : IdentityUser
 
     // https://learn.microsoft.com/en-us/ef/core/modeling/relationships/one-to-many?source=recommendations
     public ICollection<Book> Books { get; } = new List<Book>();
+    public ICollection<Quote> Quotes { get; } = new List<Quote>();
 }

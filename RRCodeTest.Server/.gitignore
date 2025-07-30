@@ -76,3 +76,5 @@ _[Ss]cripts
 .vs
 
 app.db
+app.db-shm
+app.db-wal
