@@ -94,4 +94,42 @@ public class DevController : Controller
       });
     }
   }
+
+
+  [HttpGet("Quotes")]
+  public async Task<IActionResult> DevQuotes()
+  {
+    try
+    {
+      var quotes = await _context.Quotes
+          //.Include(b => b.User)
+          .Select(b => new
+          {
+            b.Id,
+            b.Text,
+            b.Author,
+            b.Source,
+            b.UserId,
+            //UserEmail = b.User.Email
+          })
+          .ToListAsync();
+
+      return Ok(new
+      {
+        Success = true,
+        Data = quotes,
+        Count = quotes.Count,
+        Message = "Quotes retrieved successfully"
+      });
+    }
+    catch (Exception ex)
+    {
+      return StatusCode(500, new
+      {
+        Success = false,
+        Message = "Failed to retrieve quotes",
+        Error = ex.Message
+      });
+    }
+  }
 }
