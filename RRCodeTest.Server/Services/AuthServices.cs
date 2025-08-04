@@ -3,6 +3,7 @@ using RRCodeTest.Server.Models.DTOs.Token;
 using RRCodeTest.Server.Models.DTOs.User;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using RRCodeTest.Server.Models.DTOs.Quote;
 
 namespace RRCodeTest.Server.Services;
 
@@ -11,13 +12,15 @@ public class AuthServices : IAuthServices
   private readonly UserManager<User> _userManager;
   private readonly ITokenServices _tokenServices;
   private readonly IConfiguration _configuration;
+  private readonly IQuoteServices _quoteServices;
 
 
-  public AuthServices(UserManager<User> userManager, ITokenServices tokenServices, IConfiguration configuration)
+  public AuthServices(UserManager<User> userManager, ITokenServices tokenServices, IConfiguration configuration, IQuoteServices quoteServices)
   {
     _userManager = userManager;
     _tokenServices = tokenServices;
     _configuration = configuration;
+    _quoteServices = quoteServices;
   }
 
 
@@ -61,12 +64,36 @@ public class AuthServices : IAuthServices
       return ApiResponse<TokenDTO>.ErrorResponse("Registration failed", errors);
     }
 
-    //var userDTO = new UserDTO
-    //{
-    //  Id = user.Id,
-    //  Email = user.Email,
-    //  CreatedAt = user.CreatedAt
-    //};
+    var qouteInit = new List<NewQuoteDTO>() 
+    { 
+      new () {
+        Text = "The only way to do great work is to love what you do.", 
+        Author = "Steve Jobs"
+      },
+      new () {
+        Text = "For a moment, nothing happened. Then, after a second or so, nothing continued to happen.", 
+        Author = "Douglas Adams",
+        Source = "The Restaurant at the End of the Universe"
+      },
+      new () {
+        Text = "I am an optimist. It does not seem too much use being anything else.", 
+        Author = "Winstone Churchill"
+      },
+      new () {
+        Text = "je pense, donc je suis.", 
+        Author = "René Descartes"
+      },
+      new () {
+        Text = "There is a crack in everything.\r\nThat's how the light gets in.", 
+        Author = "Leonard Cohen",
+        Source = "Selected Poems"
+      },
+    };
+
+    foreach(var quote in qouteInit) 
+    {
+      await _quoteServices.AddQuote(quote, user.Id, user);
+    }
 
     return ApiResponse<TokenDTO>.SuccessResponse(await CreateTokenDTO(user), "Registration successful");
   }
